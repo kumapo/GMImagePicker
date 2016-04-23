@@ -64,10 +64,12 @@
         _navigationBarBackgroundColor = [UIColor whiteColor];
         _navigationBarTextColor = [UIColor darkTextColor];
         _navigationBarTintColor = [UIColor darkTextColor];
+        _navigationBarTranslucent = YES;
         
         _toolbarBarTintColor = [UIColor whiteColor];
         _toolbarTextColor = [UIColor darkTextColor];
         _toolbarTintColor = [UIColor darkTextColor];
+        _toolbarTranslucent = YES;
         
         _pickerStatusBarStyle = UIStatusBarStyleDefault;
         
@@ -83,7 +85,7 @@
     // Ensure nav and toolbar customisations are set. Defaults are in place, but the user may have changed them
     self.view.backgroundColor = _pickerBackgroundColor;
 
-    _navigationController.toolbar.translucent = YES;
+    _navigationController.toolbar.translucent = _toolbarTranslucent;
     _navigationController.toolbar.barTintColor = _toolbarBarTintColor;
     _navigationController.toolbar.tintColor = _toolbarTintColor;
     [(UIView*)[_navigationController.toolbar.subviews objectAtIndex:0] setAlpha:0.75f];  // URGH - I know!
@@ -115,7 +117,7 @@
     _navigationController = [[UINavigationController alloc] initWithRootViewController:albumsViewController];
     _navigationController.delegate = self;
     
-    _navigationController.navigationBar.translucent = YES;
+    _navigationController.navigationBar.translucent = _navigationBarTranslucent;
     [_navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
     _navigationController.navigationBar.shadowImage = [UIImage new];
     
