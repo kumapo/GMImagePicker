@@ -24,9 +24,33 @@ static CGSize const kAlbumThumbnailSize1 = {70.0f , 70.0f};
 static CGSize const kAlbumThumbnailSize2 = {66.0f , 66.0f};
 static CGSize const kAlbumThumbnailSize3 = {62.0f , 62.0f};
 
+@protocol GMAlbumsViewControllerDelegate <NSObject>
+
+@property (nonatomic, strong) UIColor* pickerBackgroundColor;
+@property (nonatomic) NSString* customNavigationBarPrompt;
+@property (nonatomic, strong) NSString *pickerFontName;
+@property (nonatomic) CGFloat pickerFontHeaderSize;
+@property (nonatomic) NSString* customCancelButtonTitle;
+@property (nonatomic) BOOL useCustomFontForNavigationBar;
+@property (nonatomic, assign) BOOL allowsMultipleSelection;
+@property (nonatomic) NSString* customDoneButtonTitle;
+@property (nonatomic, assign) BOOL autoDisableDoneButton;
+@property (nonatomic, strong) NSArray<__kindof PHAsset *> *selectedAssets;
+@property (nonatomic, strong) NSArray<NSNumber *> * _Nonnull mediaTypes;
+@property (nonatomic, strong) NSArray<NSNumber *> * _Nullable customSmartCollections;
+@property (nonatomic, strong) UIColor *pickerTextColor;
+@property (nonatomic, assign) BOOL displayAlbumsNumberOfAssets;
+@property (nonatomic) CGFloat pickerFontNormalSize;
+@property (nonatomic) UIStatusBarStyle pickerStatusBarStyle;
+
+@property (nullable, nonatomic, strong) NSArray<__kindof UIBarButtonItem *> *toolbarItems;  //UINavigationController
+@property (nullable, nonatomic, copy) NSString *title;  // Localized title for use by a parent controller.
+
+@end
 
 @interface GMAlbumsViewController : UITableViewController
 
+- (_Nonnull id)initWithDelegate:(id<GMAlbumsViewControllerDelegate> _Nonnull)delegate;
 - (void)selectAllAlbumsCell;
 
 @end

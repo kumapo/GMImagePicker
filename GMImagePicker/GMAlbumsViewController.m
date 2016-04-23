@@ -21,10 +21,11 @@
 @property (strong) NSArray *collectionsFetchResultsAssets;
 @property (strong) NSArray *collectionsFetchResultsTitles;
 @property (nonatomic, weak) GMImagePickerController *picker;
+@property (nonatomic, weak) id<GMAlbumsViewControllerDelegate> delegate;
+
 @property (strong) PHCachingImageManager *imageManager;
 
 @end
-
 
 @implementation GMAlbumsViewController
 
@@ -37,6 +38,15 @@
     return self;
 }
 
+- (id)initWithDelegate:(id<GMAlbumsViewControllerDelegate>)delegate
+{
+    if (self = [self init]) {
+        self.delegate = delegate;
+    }
+    
+    return self;
+}
+
 static NSString * const AllPhotosReuseIdentifier = @"AllPhotosCell";
 static NSString * const CollectionCellReuseIdentifier = @"CollectionCell";
 
@@ -44,11 +54,11 @@ static NSString * const CollectionCellReuseIdentifier = @"CollectionCell";
 {
     [super viewDidLoad];
     
-    self.view.backgroundColor = [self.picker pickerBackgroundColor];
+    self.view.backgroundColor = [self.delegate pickerBackgroundColor];
 
     // Navigation bar customization
-    if (self.picker.customNavigationBarPrompt) {
-        self.navigationItem.prompt = self.picker.customNavigationBarPrompt;
+    if (self.delegate.customNavigationBarPrompt) {
+        self.navigationItem.prompt = self.delegate.customNavigationBarPrompt;
     }
     
     self.imageManager = [[PHCachingImageManager alloc] init];
@@ -58,40 +68,40 @@ static NSString * const CollectionCellReuseIdentifier = @"CollectionCell";
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 
     // Buttons
-    NSDictionary* barButtonItemAttributes = @{NSFontAttributeName: [UIFont fontWithName:self.picker.pickerFontName size:self.picker.pickerFontHeaderSize]};
+    NSDictionary* barButtonItemAttributes = @{NSFontAttributeName: [UIFont fontWithName:self.delegate.pickerFontName size:self.delegate.pickerFontHeaderSize]};
 
-    NSString *cancelTitle = self.picker.customCancelButtonTitle ? self.picker.customCancelButtonTitle : NSLocalizedStringFromTableInBundle(@"picker.navigation.cancel-button",  @"GMImagePicker", [NSBundle bundleForClass:GMImagePickerController.class], @"Cancel");
+    NSString *cancelTitle = self.delegate.customCancelButtonTitle ? self.delegate.customCancelButtonTitle : NSLocalizedStringFromTableInBundle(@"picker.navigation.cancel-button",  @"GMImagePicker", [NSBundle bundleForClass:GMImagePickerController.class], @"Cancel");
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:cancelTitle
                                                                              style:UIBarButtonItemStylePlain
-                                                                            target:self.picker
+                                                                            target:self.delegate
                                                                             action:@selector(dismiss:)];
-    if (self.picker.useCustomFontForNavigationBar) {
+    if (self.delegate.useCustomFontForNavigationBar) {
         [self.navigationItem.leftBarButtonItem setTitleTextAttributes:barButtonItemAttributes forState:UIControlStateNormal];
         [self.navigationItem.leftBarButtonItem setTitleTextAttributes:barButtonItemAttributes forState:UIControlStateSelected];
     }
 
-    if (self.picker.allowsMultipleSelection) {
-        NSString *doneTitle = self.picker.customDoneButtonTitle ? self.picker.customDoneButtonTitle : NSLocalizedStringFromTableInBundle(@"picker.navigation.done-button",  @"GMImagePicker", [NSBundle bundleForClass:GMImagePickerController.class], @"Done");
+    if (self.delegate.allowsMultipleSelection) {
+        NSString *doneTitle = self.delegate.customDoneButtonTitle ? self.delegate.customDoneButtonTitle : NSLocalizedStringFromTableInBundle(@"picker.navigation.done-button",  @"GMImagePicker", [NSBundle bundleForClass:GMImagePickerController.class], @"Done");
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:doneTitle
                                                                                   style:UIBarButtonItemStyleDone
                                                                                  target:self.picker
                                                                                  action:@selector(finishPickingAssets:)];
-        if (self.picker.useCustomFontForNavigationBar) {
+        if (self.delegate.useCustomFontForNavigationBar) {
             [self.navigationItem.rightBarButtonItem setTitleTextAttributes:barButtonItemAttributes forState:UIControlStateNormal];
             [self.navigationItem.rightBarButtonItem setTitleTextAttributes:barButtonItemAttributes forState:UIControlStateSelected];
         }
         
-        self.navigationItem.rightBarButtonItem.enabled = (self.picker.autoDisableDoneButton ? self.picker.selectedAssets.count > 0 : TRUE);
+        self.navigationItem.rightBarButtonItem.enabled = (self.delegate.autoDisableDoneButton ? self.delegate.selectedAssets.count > 0 : TRUE);
     }
     
     // Bottom toolbar
-    self.toolbarItems = self.picker.toolbarItems;
+    self.toolbarItems = self.delegate.toolbarItems;
     
     // Title
-    if (!self.picker.title) {
+    if (!self.delegate.title) {
         self.title = NSLocalizedStringFromTableInBundle(@"picker.navigation.title",  @"GMImagePicker", [NSBundle bundleForClass:GMImagePickerController.class], @"Navigation bar default title");
     } else {
-        self.title = self.picker.title;
+        self.title = self.delegate.title;
     }
     
     // Fetch PHAssetCollections:
@@ -117,7 +127,7 @@ static NSString * const CollectionCellReuseIdentifier = @"CollectionCell";
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
-    return self.picker.pickerStatusBarStyle;
+    return self.delegate.pickerStatusBarStyle;
 }
 
 - (void)selectAllAlbumsCell {
@@ -143,7 +153,7 @@ static NSString * const CollectionCellReuseIdentifier = @"CollectionCell";
     NSMutableArray *allFetchResultLabel = [[NSMutableArray alloc] init];
     {
         PHFetchOptions *options = [[PHFetchOptions alloc] init];
-        options.predicate = [NSPredicate predicateWithFormat:@"mediaType in %@", self.picker.mediaTypes];
+        options.predicate = [NSPredicate predicateWithFormat:@"mediaType in %@", self.delegate.mediaTypes];
         options.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]];
         PHFetchResult *assetsFetchResult = [PHAsset fetchAssetsWithOptions:options];
         [allFetchResultArray addObject:assetsFetchResult];
@@ -158,7 +168,7 @@ static NSString * const CollectionCellReuseIdentifier = @"CollectionCell";
         if ([collection isKindOfClass:[PHAssetCollection class]])
         {
             PHFetchOptions *options = [[PHFetchOptions alloc] init];
-            options.predicate = [NSPredicate predicateWithFormat:@"mediaType in %@", self.picker.mediaTypes];
+            options.predicate = [NSPredicate predicateWithFormat:@"mediaType in %@", self.delegate.mediaTypes];
             PHAssetCollection *assetCollection = (PHAssetCollection *)collection;
             
             //Albums collections are allways PHAssetCollectionType=1 & PHAssetCollectionSubtype=2
@@ -180,10 +190,10 @@ static NSString * const CollectionCellReuseIdentifier = @"CollectionCell";
             PHAssetCollection *assetCollection = (PHAssetCollection *)collection;
             
             //Smart collections are PHAssetCollectionType=2;
-            if(self.picker.customSmartCollections && [self.picker.customSmartCollections containsObject:@(assetCollection.assetCollectionSubtype)])
+            if(self.delegate.customSmartCollections && [self.delegate.customSmartCollections containsObject:@(assetCollection.assetCollectionSubtype)])
             {
                 PHFetchOptions *options = [[PHFetchOptions alloc] init];
-                options.predicate = [NSPredicate predicateWithFormat:@"mediaType in %@", self.picker.mediaTypes];
+                options.predicate = [NSPredicate predicateWithFormat:@"mediaType in %@", self.delegate.mediaTypes];
                 options.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]];
                 
                 PHFetchResult *assetsFetchResult = [PHAsset fetchAssetsInAssetCollection:assetCollection options:options];
@@ -250,18 +260,18 @@ static NSString * const CollectionCellReuseIdentifier = @"CollectionCell";
     cell.tag = currentTag;
 
     // Set the label
-    cell.textLabel.font = [UIFont fontWithName:self.picker.pickerFontName size:self.picker.pickerFontHeaderSize];
+    cell.textLabel.font = [UIFont fontWithName:self.delegate.pickerFontName size:self.delegate.pickerFontHeaderSize];
     cell.textLabel.text = (self.collectionsFetchResultsTitles[indexPath.section])[indexPath.row];
-    cell.textLabel.textColor = self.picker.pickerTextColor;
+    cell.textLabel.textColor = self.delegate.pickerTextColor;
     
     // Retrieve the pre-fetched assets for this album:
     PHFetchResult *assetsFetchResult = (self.collectionsFetchResultsAssets[indexPath.section])[indexPath.row];
     
     // Display the number of assets
-    if (self.picker.displayAlbumsNumberOfAssets) {
-        cell.detailTextLabel.font = [UIFont fontWithName:self.picker.pickerFontName size:self.picker.pickerFontNormalSize];
+    if (self.delegate.displayAlbumsNumberOfAssets) {
+        cell.detailTextLabel.font = [UIFont fontWithName:self.delegate.pickerFontName size:self.delegate.pickerFontNormalSize];
         cell.detailTextLabel.text = [self tableCellSubtitle:assetsFetchResult];
-        cell.detailTextLabel.textColor = self.picker.pickerTextColor;
+        cell.detailTextLabel.textColor = self.delegate.pickerTextColor;
     }
     
     // Set the 3 images (if exists):
@@ -353,8 +363,8 @@ static NSString * const CollectionCellReuseIdentifier = @"CollectionCell";
     header.backgroundView.backgroundColor = [UIColor clearColor];
 
     // Default is a bold font, but keep this styled as a normal font
-    header.textLabel.font = [UIFont fontWithName:self.picker.pickerFontName size:self.picker.pickerFontNormalSize];
-    header.textLabel.textColor = self.picker.pickerTextColor;
+    header.textLabel.font = [UIFont fontWithName:self.delegate.pickerFontName size:self.delegate.pickerFontNormalSize];
+    header.textLabel.textColor = self.delegate.pickerTextColor;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
