@@ -172,9 +172,6 @@ static CGSize const kPopoverContentSize = {480, 720};
  */
 @property (nonatomic, strong) UINavigationController *navigationController;
 
-
-- (id)init NS_DESIGNATED_INITIALIZER;
-
 /**
  *  Managing Asset Selection
  */
