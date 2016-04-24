@@ -21,7 +21,7 @@
 @property (strong) NSArray *collectionsFetchResultsAssets;
 @property (strong) NSArray *collectionsFetchResultsTitles;
 @property (nonatomic, weak) GMImagePickerController *picker;
-@property (nonatomic, weak) id<GMAlbumsViewControllerDelegate> delegate;
+@property (nonatomic, weak) id<GMAlbumsViewControllerDelegate, GMGridViewControllerDelegate> delegate;
 
 @property (strong) PHCachingImageManager *imageManager;
 
@@ -38,7 +38,7 @@
     return self;
 }
 
-- (id)initWithDelegate:(id<GMAlbumsViewControllerDelegate>)delegate
+- (id)initWithDelegate:(id<GMAlbumsViewControllerDelegate, GMGridViewControllerDelegate>)delegate
 {
     if (self = [self init]) {
         self.delegate = delegate;
@@ -343,7 +343,8 @@ static NSString * const CollectionCellReuseIdentifier = @"CollectionCell";
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     
     // Init the GMGridViewController
-    GMGridViewController *gridViewController = [[GMGridViewController alloc] initWithPicker:[self picker]];
+    GMGridViewController *gridViewController = [[GMGridViewController alloc] initWithDelegate:self.delegate];
+    //GMGridViewController *gridViewController = [[GMGridViewController alloc] initWithPicker:[self picker]];
     // Set the title
     gridViewController.title = cell.textLabel.text;
     // Use the prefetched assets!
