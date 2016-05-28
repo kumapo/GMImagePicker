@@ -71,10 +71,16 @@ static NSString * const CollectionCellReuseIdentifier = @"CollectionCell";
     NSDictionary* barButtonItemAttributes = @{NSFontAttributeName: [UIFont fontWithName:self.delegate.pickerFontName size:self.delegate.pickerFontHeaderSize]};
 
     NSString *cancelTitle = self.delegate.customCancelButtonTitle ? self.delegate.customCancelButtonTitle : NSLocalizedStringFromTableInBundle(@"picker.navigation.cancel-button",  @"GMImagePicker", [NSBundle bundleForClass:GMImagePickerController.class], @"Cancel");
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:cancelTitle
-                                                                             style:UIBarButtonItemStylePlain
-                                                                            target:self.delegate
-                                                                            action:@selector(dismiss:)];
+    
+    // Add buttons only if navigationController is kind of GMImagePickerController
+    if ([self.navigationController isKindOfClass:[GMImagePickerController class]]) {
+        self.navigationItem.leftBarButtonItem =
+            [[UIBarButtonItem alloc] initWithTitle:cancelTitle
+                                             style:UIBarButtonItemStylePlain
+                                            target:self.delegate
+                                            action:@selector(dismiss:)];
+    }
+    
     if (self.delegate.useCustomFontForNavigationBar) {
         [self.navigationItem.leftBarButtonItem setTitleTextAttributes:barButtonItemAttributes forState:UIControlStateNormal];
         [self.navigationItem.leftBarButtonItem setTitleTextAttributes:barButtonItemAttributes forState:UIControlStateSelected];
