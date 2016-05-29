@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GMGridViewController.h"
 
 // Measuring IOS8 Photos APP at @2x (iPhone5s):
 //   The rows are 180px/90pts
@@ -45,12 +46,14 @@ static CGSize const kAlbumThumbnailSize3 = {62.0f , 62.0f};
 
 @property (nullable, nonatomic, strong) NSArray<__kindof UIBarButtonItem *> *toolbarItems;  //UINavigationController
 @property (nullable, nonatomic, copy) NSString *title;  // Localized title for use by a parent controller.
-
+@property (nullable, nonatomic, copy) NSString *navigationItemTitle; 
 @end
 
 @interface GMAlbumsViewController : UITableViewController
 
-- (_Nonnull id)initWithDelegate:(id<GMAlbumsViewControllerDelegate> _Nonnull)delegate;
+- (_Nonnull instancetype)init;
 - (void)selectAllAlbumsCell;
+
+@property (nonatomic, weak) _Nullable id<GMAlbumsViewControllerDelegate, GMGridViewControllerDelegate> delegate;
 
 @end

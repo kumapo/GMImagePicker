@@ -21,7 +21,6 @@
 @property (strong) NSArray *collectionsFetchResultsAssets;
 @property (strong) NSArray *collectionsFetchResultsTitles;
 @property (nonatomic, weak) GMImagePickerController *picker;
-@property (nonatomic, weak) id<GMAlbumsViewControllerDelegate, GMGridViewControllerDelegate> delegate;
 
 @property (strong) PHCachingImageManager *imageManager;
 
@@ -29,7 +28,7 @@
 
 @implementation GMAlbumsViewController
 
-- (id)init
+- (instancetype)init
 {
     if (self = [super initWithStyle:UITableViewStylePlain]) {
         self.preferredContentSize = kPopoverContentSize;
@@ -103,11 +102,13 @@ static NSString * const CollectionCellReuseIdentifier = @"CollectionCell";
     // Bottom toolbar
     self.toolbarItems = self.delegate.toolbarItems;
     
-    // Title
-    if (!self.delegate.title) {
-        self.title = NSLocalizedStringFromTableInBundle(@"picker.navigation.title",  @"GMImagePicker", [NSBundle bundleForClass:GMImagePickerController.class], @"Navigation bar default title");
-    } else {
+    // NavigationItem Title and TabbarItem Title
+    if (self.delegate.title) {
         self.title = self.delegate.title;
+    } else if (self.delegate.navigationItemTitle){
+        self.navigationItem.title = self.delegate.navigationItemTitle;
+    } else {
+        self.title = NSLocalizedStringFromTableInBundle(@"picker.navigation.title",  @"GMImagePicker", [NSBundle bundleForClass:GMImagePickerController.class], @"Navigation bar default title");
     }
     
     // Fetch PHAssetCollections:
