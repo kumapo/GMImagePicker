@@ -249,6 +249,11 @@ NSString * const GMGridViewCellIdentifier = @"GMGridViewCellIdentifier";
 
 - (void)setupButtons
 {
+    // Add buttons only if navigationController is kind of GMImagePickerController
+    if (![self.navigationController isKindOfClass:[GMImagePickerController class]]) {
+        return;
+    }
+    
     if (self.delegate.allowsMultipleSelection) {
         NSString *doneTitle = self.delegate.customDoneButtonTitle ? self.picker.customDoneButtonTitle : NSLocalizedStringFromTableInBundle(@"picker.navigation.done-button",  @"GMImagePicker", [NSBundle bundleForClass:GMImagePickerController.class], @"Done");
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:doneTitle

@@ -78,25 +78,25 @@ static NSString * const CollectionCellReuseIdentifier = @"CollectionCell";
                                              style:UIBarButtonItemStylePlain
                                             target:self.delegate
                                             action:@selector(dismiss:)];
-    }
-    
-    if (self.delegate.useCustomFontForNavigationBar) {
-        [self.navigationItem.leftBarButtonItem setTitleTextAttributes:barButtonItemAttributes forState:UIControlStateNormal];
-        [self.navigationItem.leftBarButtonItem setTitleTextAttributes:barButtonItemAttributes forState:UIControlStateSelected];
-    }
 
-    if (self.delegate.allowsMultipleSelection) {
-        NSString *doneTitle = self.delegate.customDoneButtonTitle ? self.delegate.customDoneButtonTitle : NSLocalizedStringFromTableInBundle(@"picker.navigation.done-button",  @"GMImagePicker", [NSBundle bundleForClass:GMImagePickerController.class], @"Done");
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:doneTitle
+        if (self.delegate.useCustomFontForNavigationBar) {
+            [self.navigationItem.leftBarButtonItem setTitleTextAttributes:barButtonItemAttributes forState:UIControlStateNormal];
+            [self.navigationItem.leftBarButtonItem setTitleTextAttributes:barButtonItemAttributes forState:UIControlStateSelected];
+        }
+
+        if (self.delegate.allowsMultipleSelection) {
+            NSString *doneTitle = self.delegate.customDoneButtonTitle ? self.delegate.customDoneButtonTitle : NSLocalizedStringFromTableInBundle(@"picker.navigation.done-button",  @"GMImagePicker", [NSBundle bundleForClass:GMImagePickerController.class], @"Done");
+            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:doneTitle
                                                                                   style:UIBarButtonItemStyleDone
                                                                                  target:self.picker
                                                                                  action:@selector(finishPickingAssets:)];
-        if (self.delegate.useCustomFontForNavigationBar) {
-            [self.navigationItem.rightBarButtonItem setTitleTextAttributes:barButtonItemAttributes forState:UIControlStateNormal];
-            [self.navigationItem.rightBarButtonItem setTitleTextAttributes:barButtonItemAttributes forState:UIControlStateSelected];
-        }
+            if (self.delegate.useCustomFontForNavigationBar) {
+                [self.navigationItem.rightBarButtonItem setTitleTextAttributes:barButtonItemAttributes forState:UIControlStateNormal];
+                [self.navigationItem.rightBarButtonItem setTitleTextAttributes:barButtonItemAttributes forState:UIControlStateSelected];
+            }
         
-        self.navigationItem.rightBarButtonItem.enabled = (self.delegate.autoDisableDoneButton ? self.delegate.selectedAssets.count > 0 : TRUE);
+            self.navigationItem.rightBarButtonItem.enabled = (self.delegate.autoDisableDoneButton ? self.delegate.selectedAssets.count > 0 : TRUE);
+        }
     }
     
     // Bottom toolbar
