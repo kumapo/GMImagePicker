@@ -19,11 +19,11 @@
 @property (nonatomic) NSInteger colsInLandscape;
 @property (nonatomic) NSString * _Nullable customNavigationBarPrompt;
 @property (nonatomic) UIStatusBarStyle pickerStatusBarStyle;
-@property (nonatomic, strong) UIColor *pickerBackgroundColor;
+@property (nonatomic, strong) UIColor * _Nullable pickerBackgroundColor;
 @property (nonatomic) NSString * _Nullable  customDoneButtonTitle;
 @property (nonatomic) NSString * _Nullable  customCancelButtonTitle;
 @property (nonatomic, assign) BOOL autoDisableDoneButton;
-@property (nonatomic, strong) NSArray<__kindof PHAsset *> *selectedAssets;
+@property (nonatomic, strong) NSArray<__kindof PHAsset *> * _Nonnull selectedAssets;
 @property (nonatomic) BOOL useCustomFontForNavigationBar;
 @property (nonatomic, strong) NSString * _Nonnull pickerFontName;
 @property (nonatomic) CGFloat pickerFontHeaderSize;

@@ -360,6 +360,16 @@ static NSString * const CollectionCellReuseIdentifier = @"CollectionCell";
     // Remove selection so it looks better on slide in
     [tableView deselectRowAtIndexPath:indexPath animated:true];
     
+    if ([self.delegate customBackIndicatorImage]) {
+        [self.navigationController.navigationBar
+            setBackIndicatorImage:[self.delegate customBackIndicatorImage]];
+        [self.navigationController.navigationBar
+            setBackIndicatorTransitionMaskImage:[self.delegate customBackIndicatorImage]];
+        self.navigationItem.backBarButtonItem =
+            [[UIBarButtonItem alloc] initWithTitle:@""
+                                             style:UIBarButtonItemStylePlain target:nil action:nil];
+    }
+
     // Push GMGridViewController
     [self.navigationController pushViewController:gridViewController animated:YES];
 }

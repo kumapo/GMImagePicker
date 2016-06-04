@@ -46,7 +46,9 @@ static CGSize const kAlbumThumbnailSize3 = {62.0f , 62.0f};
 
 @property (nullable, nonatomic, strong) NSArray<__kindof UIBarButtonItem *> *toolbarItems;  //UINavigationController
 @property (nullable, nonatomic, copy) NSString *title;  // Localized title for use by a parent controller.
-@property (nullable, nonatomic, copy) NSString *navigationItemTitle; 
+@property (nullable, nonatomic, copy) NSString *navigationItemTitle;
+@property (nullable, nonatomic, readonly) UIImage* customBackIndicatorImage;
+
 @end
 
 @interface GMAlbumsViewController : UITableViewController
