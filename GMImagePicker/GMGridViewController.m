@@ -203,41 +203,75 @@ NSString * const GMGridViewCellIdentifier = @"GMGridViewCellIdentifier";
     return self.delegate.pickerStatusBarStyle;
 }
 
+// #pragma mark - Rotation
+//// commented out because of not to be called 
+// - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+// {
+//     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    
+//     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+//         return;
+//     }
 
-#pragma mark - Rotation
+//     UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+//     UICollectionViewFlowLayout *layout = [self collectionViewFlowLayoutForOrientation:orientation];
 
-- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-{
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        return;
-    }
-    
-    UICollectionViewFlowLayout *layout = [self collectionViewFlowLayoutForOrientation:toInterfaceOrientation];
-    
-    //Update the AssetGridThumbnailSize:
-    CGFloat scale = [UIScreen mainScreen].scale;
-    AssetGridThumbnailSize = CGSizeMake(layout.itemSize.width * scale, layout.itemSize.height * scale);
-    
-    [self resetCachedAssets];
-    //This is optional. Reload visible thumbnails:
-    for (GMGridViewCell *cell in [self.collectionView visibleCells]) {
-        NSInteger currentTag = cell.tag;
-        [self.imageManager requestImageForAsset:cell.asset
-                                     targetSize:AssetGridThumbnailSize
-                                    contentMode:PHImageContentModeAspectFill
-                                        options:nil
-                                  resultHandler:^(UIImage *result, NSDictionary *info)
-                                    {
-                                        // Only update the thumbnail if the cell tag hasn't changed. Otherwise, the cell has been re-used.
-                                        if (cell.tag == currentTag) {
-                                            [cell.imageView setImage:result];
-                                        }
-                                    }];
-    }
-    
-    [self.collectionView setCollectionViewLayout:layout animated:YES];
-}
+//     //Update the AssetGridThumbnailSize:
+//     CGFloat scale = [UIScreen mainScreen].scale;
+//     AssetGridThumbnailSize = CGSizeMake(layout.itemSize.width * scale, layout.itemSize.height * scale);
 
+//     [self resetCachedAssets];
+//     //This is optional. Reload visible thumbnails:
+//     for (GMGridViewCell *cell in [self.collectionView visibleCells]) {
+//         NSInteger currentTag = cell.tag;
+//         [self.imageManager requestImageForAsset:cell.asset
+//                                      targetSize:AssetGridThumbnailSize
+//                                     contentMode:PHImageContentModeAspectFill
+//                                         options:nil
+//                                   resultHandler:^(UIImage *result, NSDictionary *info)
+//                                     {
+//                                         // Only update the thumbnail if the cell tag hasn't changed. Otherwise, the cell has been re-used.
+//                                         if (cell.tag == currentTag) {
+//                                             [cell.imageView setImage:result];
+//                                         }
+//                                     }];
+//     }
+
+//     [self.collectionView setCollectionViewLayout:layout animated:YES];
+// }
+
+//// commented out because of deprecated
+// - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+// {
+//     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+//         return;
+//     }
+//    
+//     UICollectionViewFlowLayout *layout = [self collectionViewFlowLayoutForOrientation:toInterfaceOrientation];
+//    
+//     //Update the AssetGridThumbnailSize:
+//     CGFloat scale = [UIScreen mainScreen].scale;
+//     AssetGridThumbnailSize = CGSizeMake(layout.itemSize.width * scale, layout.itemSize.height * scale);
+//    
+//     [self resetCachedAssets];
+//     //This is optional. Reload visible thumbnails:
+//     for (GMGridViewCell *cell in [self.collectionView visibleCells]) {
+//         NSInteger currentTag = cell.tag;
+//         [self.imageManager requestImageForAsset:cell.asset
+//                                      targetSize:AssetGridThumbnailSize
+//                                     contentMode:PHImageContentModeAspectFill
+//                                         options:nil
+//                                   resultHandler:^(UIImage *result, NSDictionary *info)
+//                                     {
+//                                         // Only update the thumbnail if the cell tag hasn't changed. Otherwise, the cell has been re-used.
+//                                         if (cell.tag == currentTag) {
+//                                             [cell.imageView setImage:result];
+//                                         }
+//                                     }];
+//     }
+//    
+//     [self.collectionView setCollectionViewLayout:layout animated:YES];
+// }
 
 #pragma mark - Setup
 
